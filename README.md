@@ -36,7 +36,7 @@ All sensor values are updated every 10 seconds, so this sensor is also ideal for
 
 -> The total cost is around 70-80€.
 
-Assembly instructions (note: in progress, only photos for now): docs/assembly_guide.md
+Assembly instructions (note: in progress, only photos for now): [assembly_guide.md](docs/assembly_guide.md)
 
 ## Limitations
 Status: March 2025
