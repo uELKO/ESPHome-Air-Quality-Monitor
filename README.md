@@ -5,7 +5,7 @@ An “Environmental Sensor Node for Air Quality Applications” from Sensirion i
 The housing consists of 3 parts, which can be easily 3D printed. The STEP files are stored in the “3d-models” folder.
 The measured values are displayed via the ESPHome integration in Home Assistant and optionally via an e-paper display on the front.
 
-The aim was to design both a stationary sensor for determining indoor air quality and a mobile sensor for on-the-go use.
+The aim was to develop both a stationary sensor for determining indoor air quality and a mobile sensor for use on the move. The applications range from use as an informative sensor to warning messages when limit values are exceeded or as a sensor for controlling temperature and room air.
 
 ## Features
 Depending on the model of the Sensirion sensor, different physical quantities can be obtained.
@@ -21,6 +21,11 @@ In addition, there are further virtual sensors through the ESPHome yaml:
 - PM ≤10 µm: Sum of the dust particle concentration
 - TVOC according to Mølhave
 - IAQ index (parameterizable weighting of CO2, TVOC and PM)
+
+All sensor values are updated every 10 seconds, so this sensor is also ideal for creating fast control loops with other devices, e.g:
+- Air purifiers
+- Radiator valves
+- Air conditioning systems
 
 ## List of Materials
 - MCU:      Seeed Studio XIAO ESP32S3
