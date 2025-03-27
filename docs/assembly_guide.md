@@ -1,15 +1,15 @@
 ## Pinout
 SEN6x (I2C):
-  sda: GPIO1
-  scl: GPIO2
+- sda: GPIO1
+- scl: GPIO2
 
 Display (SPI):
-    cs_pin: GPIO4
-    dc_pin: GPIO5
-    busy_pin: GPIO43
-    reset_pin: GPIO6
-    clk_pin: GPIO8
-    mosi_pin: GPIO9
+- cs_pin: GPIO4
+- dc_pin: GPIO5
+- busy_pin: GPIO43
+- reset_pin: GPIO6
+- clk_pin: GPIO8
+- mosi_pin: GPIO9
 
 ## Assembly Steps (to be reworked...)
 
