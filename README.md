@@ -36,6 +36,8 @@ All sensor values are updated every 10 seconds, so this sensor is also ideal for
 
 -> The total cost is around 70-80€.
 
+Assembly instructions (note: in progress, only photos for now): docs/assembly_guide.md
+
 ## Limitations
 Status: March 2025
 - Native temperature compensation not working -> deduction of a linear offset for temperature and humidity, resulting in two virtual sensors (Ambient Temperature, Ambient Humidity)
