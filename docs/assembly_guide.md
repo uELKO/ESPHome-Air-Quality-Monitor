@@ -17,9 +17,9 @@ Display (SPI):
 
 ![PXL_20250325_113506153](https://github.com/user-attachments/assets/35b36dc9-1e6e-4ac0-911c-ada3c2fbafd7)
 
-![PXL_20250325_113714687](https://github.com/user-attachments/assets/c6cc5fe2-61e3-4c26-9a8c-bb7508ef1103)
-
 ![PXL_20250325_113933571](https://github.com/user-attachments/assets/d0b3e2c1-4856-4f9e-9e95-376c1e2727b5)
+
+![PXL_20250325_113714687](https://github.com/user-attachments/assets/c6cc5fe2-61e3-4c26-9a8c-bb7508ef1103)
 
 ![PXL_20250325_115027300](https://github.com/user-attachments/assets/07a4f36f-026a-4262-92ac-50a63d29c961)
 
