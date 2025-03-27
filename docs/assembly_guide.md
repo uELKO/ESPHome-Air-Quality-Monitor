@@ -11,7 +11,7 @@ Display (SPI):
 - clk_pin: GPIO8
 - mosi_pin: GPIO9
 
-## Assembly Steps (to be reworked...)
+## Assembly Steps (in progress...)
 
 ![PXL_20250325_113457639](https://github.com/user-attachments/assets/75f18547-935f-4800-a274-fdb73a391efe)
 
