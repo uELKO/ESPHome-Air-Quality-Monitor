@@ -1,4 +1,4 @@
-![grafik](https://github.com/user-attachments/assets/82169074-73bb-45dd-b71f-ec78967328a5)
+![Unbenannt](https://github.com/user-attachments/assets/e73defc6-22d7-4974-96ab-195be5b86065)
 
 ## Project outline
 This project describes a sensor for measuring indoor air quality with power supply via USB-C.
