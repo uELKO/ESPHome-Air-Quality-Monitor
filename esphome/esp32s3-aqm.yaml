@@ -1,7 +1,7 @@
 esphome:
   name: "esp32s3-aqs-1"
   friendly_name: ESP32S3-AQS-1
-  min_version: 2024.11.0
+  min_version: 2025.11.0
   name_add_mac_suffix: false
   on_boot:
     - priority: -100
@@ -198,14 +198,15 @@ sensor:
     #  normalized_offset_slope: 0
     #  time_constant: 0
     store_baseline: true
-    update_interval: 10s
+    update_interval: 30s
 
   - platform: template
     name: "Ambient Temperature"
     id: sen66_ambient_temperature
     unit_of_measurement: "°C"
+    device_class: temperature
     accuracy_decimals: 1
-    update_interval: 10s
+    update_interval: 30s
     lambda: |-
       return id(sen66_temperature_top).state + id(temperature_offset_input).state;
 
@@ -213,8 +214,9 @@ sensor:
     name: "Ambient Humidity"
     id: sen66_ambient_humidity
     unit_of_measurement: "%"
+    device_class: humidity
     accuracy_decimals: 0
-    update_interval: 10s
+    update_interval: 30s
     lambda: |-
       return id(sen66_humidity).state + id(humidity_offset_input).state;
 
@@ -223,7 +225,7 @@ sensor:
     id: sen66_pm010
     unit_of_measurement: "µg/m³"
     accuracy_decimals: 1
-    update_interval: 10s
+    update_interval: 30s
     lambda: |-
       return id(sen66_pm10).state + id(sen66_pm25).state + id(sen66_pm40).state + id(sen66_pm100).state;
     
@@ -232,7 +234,7 @@ sensor:
     id: sen66_tvoc
     unit_of_measurement: "mg/m³"
     accuracy_decimals: 2
-    update_interval: 10s
+    update_interval: 30s
     lambda: |-
       if (isnan(id(sen66_voc).state)) {
         return NAN;
@@ -377,25 +379,29 @@ display:
           it.printf(228, 28, id(materialdesign_icons_25), "\U000F109B");
         }
         
-        int x = 228;
-        int y = 3;
-        if (!WiFi.isConnected()) {
-          it.printf(x, y, id(materialdesign_icons_25), "%s", "\U000F092B"); // Alert-Symbol
+      int x = 228;
+      int y = 3;
+
+      auto wifi_comp = esphome::wifi::global_wifi_component;
+
+      if (wifi_comp == nullptr || !wifi_comp->is_connected()) {
+        // nicht verbunden → Alert-Symbol
+        it.printf(x, y, id(materialdesign_icons_25), "%s", "\U000F092B");
+      } else {
+        int rssi = wifi_comp->wifi_rssi();
+        const char* icon;
+        if (rssi > -50) {
+          icon = "\U000F0928"; // wifi-strength-4
+        } else if (rssi > -60) {
+          icon = "\U000F0925"; // wifi-strength-3
+        } else if (rssi > -70) {
+          icon = "\U000F0922"; // wifi-strength-2
         } else {
-          int rssi = WiFi.RSSI();
-          const char* icon;
-          if (rssi > -50) {
-            icon = "\U000F0928"; // mdi-wifi-strength-4
-          } else if (rssi > -60) {
-            icon = "\U000F0925"; // mdi-wifi-strength-3
-          } else if (rssi > -70) {
-            icon = "\U000F0922"; // mdi-wifi-strength-2
-          } else {
-            icon = "\U000F091F"; // mdi-wifi-strength-1
-          }
-          it.printf(x, y, id(materialdesign_icons_25), "%s", icon);
+          icon = "\U000F091F"; // wifi-strength-1
         }
-        
+        it.printf(x, y, id(materialdesign_icons_25), "%s", icon);
+      }
+
         // Temperature display
         if (isnan(id(sen66_ambient_temperature).state)) {
           it.print(0, 5, id(font_7s_Temp), "NA");
