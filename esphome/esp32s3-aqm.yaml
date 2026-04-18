@@ -1,7 +1,7 @@
 esphome:
   name: "esp32s3-aqs-1"
   friendly_name: ESP32S3-AQS-1
-  min_version: 2025.11.0
+  min_version: 2024.11.0
   name_add_mac_suffix: false
   on_boot:
     - priority: -100
@@ -205,6 +205,7 @@ sensor:
     id: sen66_ambient_temperature
     unit_of_measurement: "°C"
     device_class: temperature
+    state_class: measurement
     accuracy_decimals: 1
     update_interval: 30s
     lambda: |-
@@ -215,6 +216,7 @@ sensor:
     id: sen66_ambient_humidity
     unit_of_measurement: "%"
     device_class: humidity
+    state_class: measurement
     accuracy_decimals: 0
     update_interval: 30s
     lambda: |-
@@ -224,6 +226,7 @@ sensor:
     name: "PM ≤10 µm"
     id: sen66_pm010
     unit_of_measurement: "µg/m³"
+    state_class: measurement
     accuracy_decimals: 1
     update_interval: 30s
     lambda: |-
@@ -233,6 +236,7 @@ sensor:
     name: "TVOC (Mølhave)"
     id: sen66_tvoc
     unit_of_measurement: "mg/m³"
+    state_class: measurement
     accuracy_decimals: 2
     update_interval: 30s
     lambda: |-
@@ -246,6 +250,7 @@ sensor:
     name: "IAQ Index"
     id: iaq_index
     unit_of_measurement: "IAQ"
+    state_class: measurement
     accuracy_decimals: 0
     lambda: |-
       float iaq = 100.0; // Start value for good air quality
@@ -318,6 +323,24 @@ sensor:
           window_size: 5
           send_every: 1
 
+  - platform: template
+    name: "Dew Point"
+    id: sen66_dew_point
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    update_interval: 30s
+    lambda: |-
+      float T = id(sen66_ambient_temperature).state;
+      float RH = id(sen66_ambient_humidity).state;
+      if (isnan(T) || isnan(RH) || RH <= 0) return NAN;
+      // Magnus formula constants (valid for 0–60 °C)
+      const float a = 17.625f;
+      const float b = 243.04f;
+      float alpha = log(RH / 100.0f) + (a * T) / (b + T);
+      return (b * alpha) / (a - alpha);
+
 number:
   - platform: template
     name: "Temperature Offset"
@@ -379,29 +402,25 @@ display:
           it.printf(228, 28, id(materialdesign_icons_25), "\U000F109B");
         }
         
-      int x = 228;
-      int y = 3;
-
-      auto wifi_comp = esphome::wifi::global_wifi_component;
-
-      if (wifi_comp == nullptr || !wifi_comp->is_connected()) {
-        // nicht verbunden → Alert-Symbol
-        it.printf(x, y, id(materialdesign_icons_25), "%s", "\U000F092B");
-      } else {
-        int rssi = wifi_comp->wifi_rssi();
-        const char* icon;
-        if (rssi > -50) {
-          icon = "\U000F0928"; // wifi-strength-4
-        } else if (rssi > -60) {
-          icon = "\U000F0925"; // wifi-strength-3
-        } else if (rssi > -70) {
-          icon = "\U000F0922"; // wifi-strength-2
+        int x = 228;
+        int y = 3;
+        if (!wifi::global_wifi_component->is_connected()) {
+          it.printf(x, y, id(materialdesign_icons_25), "%s", "\U000F092B");
         } else {
-          icon = "\U000F091F"; // wifi-strength-1
+          int rssi = wifi::global_wifi_component->wifi_rssi();
+          const char* icon;
+          if (rssi > -50) {
+            icon = "\U000F0928";
+          } else if (rssi > -60) {
+            icon = "\U000F0925";
+          } else if (rssi > -70) {
+            icon = "\U000F0922";
+          } else {
+            icon = "\U000F091F";
+          }
+          it.printf(x, y, id(materialdesign_icons_25), "%s", icon);
         }
-        it.printf(x, y, id(materialdesign_icons_25), "%s", icon);
-      }
-
+        
         // Temperature display
         if (isnan(id(sen66_ambient_temperature).state)) {
           it.print(0, 5, id(font_7s_Temp), "NA");
